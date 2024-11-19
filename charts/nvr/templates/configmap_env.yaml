@@ -19,7 +19,7 @@ data:
   PERIPHERAL_ID: {{ include "nvr.fullname" . }}
   # Variable substitution in GST_PIPELINE_TEMPLATE replaces "uri"
   PERIPHERAL_STREAM_URI: "rtsp://rtsp-video-file-streams:8554/vid5"
-  GST_PIPELINE_TEMPLATE: "videotestsrc pattern=ball ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),width=1920,height=1080 ! ! tee name=t t. ! nvvideoconvert ! video/x-raw(memory:NVMM),width=[1,1920],height=[1,1080],pixel-aspect-ratio=1/1 ! nvvideoconvert ! queue ! nvjpegenc quality=55 ! appsink sync=0 name=mqttsink t. ! nvvideoconvert ! video/x-raw,format=RGB,width=[1,640],height=[1,360],pixel-aspect-ratio=1/1 ! nvvideoconvert ! motioncells threshold=0.0001 gridx=32 gridy=18 ! fakesink"
+  GST_PIPELINE_TEMPLATE: "videotestsrc pattern=ball ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),width=1920,height=1080 ! tee name=t t. ! nvvideoconvert ! video/x-raw(memory:NVMM),width=[1,1920],height=[1,1080],pixel-aspect-ratio=1/1 ! nvvideoconvert ! queue ! nvjpegenc quality=55 ! appsink sync=0 name=mqttsink t. ! nvvideoconvert ! video/x-raw,format=RGB,width=[1,640],height=[1,360],pixel-aspect-ratio=1/1 ! nvvideoconvert ! motioncells threshold=0.0001 gridx=32 gridy=18 ! fakesink"
   # Deprecated in favor of ORG TREE
   LOCATION_COUNTRY: "us"
   LOCATION_REGION: "texas"
