@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "{{ include "nvr.fullname" . }}-env-config"
+  name: "{{ printf "%s-env-config" (include "nvr.fullname" .) }}"
   labels:
     app: nvr
 data:
@@ -14,7 +14,7 @@ data:
   MOTION_ACTIVE_INTERVAL: "0"
   MOTION_INACTIVE_INTERVAL: "900"
   PERIPHERAL_TYPE: "camera"
-  PERIPHERAL_NAME: { { include "nvr.fullname" . } }
+  PERIPHERAL_NAME: {{ include "nvr.fullname" . }}
   # Variable substitution in GST_PIPELINE_TEMPLATE replaces "camera_id"
   PERIPHERAL_ID: {{ include "nvr.fullname" . }}
   # Variable substitution in GST_PIPELINE_TEMPLATE replaces "uri"
