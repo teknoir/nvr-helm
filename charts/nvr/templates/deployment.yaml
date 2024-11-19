@@ -35,7 +35,7 @@ spec:
             - configMapRef:
                 name: {{ include "nvr.configmapName" . }}
           resources:
-            { { - toYaml .Values.nvr.resources | nindent 12 } }
+            {{- toYaml .Values.nvr.resources | nindent 12 }}
           volumeMounts:
             - name: model-volume
               mountPath: /models
