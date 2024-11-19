@@ -22,7 +22,7 @@ spec:
       runtimeClassName: nvidia
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.nvr.image.repository }}:{{ .Values.nvr.image.tag }}"
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
