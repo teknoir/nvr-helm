@@ -33,7 +33,7 @@ spec:
             failureThreshold: 10
           envFrom:
             - configMapRef:
-                name: "{{ printf "%s-env-config" (include "nvr.fullname" .) }}"
+                name: {{ include "nvr.configmapName" . }}
           resources:
             { { - toYaml .Values.nvr.resources | nindent 12 } }
           volumeMounts:

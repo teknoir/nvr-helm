@@ -22,3 +22,10 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 {{- end }}
 {{- end }}
+
+{{/*
+Generate the ConfigMap name.
+*/}}
+{{- define "nvr.configmapName" -}}
+{{- printf "%s-env-config" (include "nvr.fullname" .) }}
+{{- end }}

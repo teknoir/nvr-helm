@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "{{ printf "%s-env-config" (include "nvr.fullname" .) }}"
+  name: {{ include "nvr.configmapName" . }}
   labels:
     app: nvr
 data:
