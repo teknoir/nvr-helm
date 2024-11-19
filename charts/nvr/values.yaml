@@ -12,7 +12,9 @@ nvr:
     repository: us-docker.pkg.dev/teknoir/gcr.io/nvr
     # This sets the pull policy for images.
     pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
+    # Overrides the image tag whose default is "ds7-gst1.24.7".
+    # ds7-gst1.24.7: Nvidia Ada Lovelace GPU on AMD64
+    # ds7-gst1.24.7-l4t: Nvidia Orin(tegra) on ARM64
     tag: ds7-gst1.24.7
   resources:
      limits:
