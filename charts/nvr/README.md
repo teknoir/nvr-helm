@@ -1,6 +1,6 @@
 # Teknoir AI NVR Helm Chart
 
-This chart deploys the Teknoir AI NVR to a Kubernetes cluster.
+This chart deploys Teknoir AI NVRs to a Kubernetes cluster.
 
 > The implementation of the Helm chart is right now the bare minimum to get it to work.
 
@@ -19,7 +19,7 @@ spec:
   chart: nvr
   targetNamespace: default
   valuesContent: |-
-    nvr:
+    instances:
       TBD
 ```
 

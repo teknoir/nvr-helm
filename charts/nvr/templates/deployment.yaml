@@ -1,19 +1,22 @@
+{{- range .Values.instances }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "nvr.fullname" . }}
+  name: {{ .name }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ include "nvr.fullname" . }}
+      app: {{ .name }}
   template:
     metadata:
       labels:
-        teknoir.org/app: {{ include "nvr.fullname" . }}
-        app: {{ include "nvr.fullname" . }}
+        teknoir.org/app: {{ .name }}
+        app: {{ .name }}
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/path: "/metrics"
@@ -21,8 +24,8 @@ spec:
     spec:
       runtimeClassName: nvidia
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.nvr.image.repository }}:{{ .Values.nvr.image.tag }}"
+        - name: {{ $.Chart.Name }}
+          image: "{{ default $.Values.defaults.image.repository (default (dict "repository" $.Values.defaults.image.repository) .image).repository }}:{{ default $.Values.defaults.image.tag (default (dict "tag" $.Values.defaults.image.tag) .image).tag }}"
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
@@ -33,36 +36,37 @@ spec:
             failureThreshold: 10
           envFrom:
             - configMapRef:
-                name: {{ include "nvr.configmapName" . }}
+                name: {{ .name }}-env-config
           resources:
-            {{- toYaml .Values.nvr.resources | nindent 12 }}
+            {{- toYaml (default $.Values.defaults.resources .resources) | nindent 12 }}
           volumeMounts:
             - name: model-volume
               mountPath: /models
             - name: video-storage
               mountPath: /app/videos
-            {{- if .Values.nvr.nvdsanalytics.enabled }}
+            {{- if (default $.Values.defaults.nvdsanalytics.enabled (default (dict "enabled" $.Values.defaults.nvdsanalytics.enabled) .nvdsanalytics).enabled) }}
             - name: nvdsanalytics-config
-              mountPath: {{ .Values.nvr.nvdsanalytics.mountPath }}
+              mountPath: {{ default $.Values.defaults.mountPath (default (dict "mountPath" $.Values.defaults.nvdsanalytics.mountPath) .nvdsanalytics).mountPath }}
             {{- end }}
             - name: tmp
               mountPath: /tmp
       volumes:
         - name: model-volume
           hostPath:
-            path: {{ .Values.nvr.modelRepositoryPath }}
+            path: {{ default $.Values.defaults.modelRepositoryPath .modelRepositoryPath }}
             type: DirectoryOrCreate
         - name: video-storage
           hostPath:
-            path: {{ .Values.nvr.videoStoragePath }}
+            path: {{ default $.Values.defaults.videoStoragePath .videoStoragePath }}
             type: DirectoryOrCreate
-        {{- if .Values.nvr.nvdsanalytics.enabled }}
+        {{- if (default $.Values.defaults.nvdsanalytics.enabled (default (dict "enabled" $.Values.defaults.nvdsanalytics.enabled) .nvdsanalytics).enabled) }}
         - name: nvdsanalytics-config
           configMap:
-            name: {{ include "nvr.analyticsConfigmapName" . }}
+            name: {{ .name }}-analytics-config
         {{- end }}
         # Nvidia has the argus socket mounted under /tmp/argus_socket
         - name: tmp
           hostPath:
             path: /tmp
             type: DirectoryOrCreate
+  {{- end }}

@@ -1,37 +1,41 @@
+{{- range .Values.instances }}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "nvr.configmapName" . }}
+  name: {{ .name }}-env-config
+  namespace: {{ $.Release.Namespace }}
   labels:
-    app: nvr
+    app: {{ .name }}
 data:
-  DEBUG_LEVEL: "{{ .Values.nvr.debugLevel }}"
-  MQTT_CLIENT_ID: "{{ include "nvr.fullname" . }}"
-  MQTT_SERVICE_HOST: "{{ .Values.nvr.mqtt.broker }}"
-  MQTT_SERVICE_PORT: "{{ .Values.nvr.mqtt.port }}"
-  MQTT_QOS: "{{ .Values.nvr.mqtt.qos }}"
-  MQTT_KEEP_ALIVE_INTERVAL: "{{ .Values.nvr.mqtt.keepAliveInterval }}"
-  MQTT_CONNECT_RETRY_INTERVAL: "{{ .Values.nvr.mqtt.connectRetryInterval }}"
-  MQTT_OUT_PREFIX: "{{ .Values.nvr.mqtt.topicPrefix }}"
-  MQTT_QUEUE_LIMIT: "{{ .Values.nvr.mqtt.queueLimit }}"
-  ENABLE_MQTT_STATE: "{{ .Values.nvr.mqtt.metrics }}"
-  METRICS_STATE_TOPIC: "{{ .Values.nvr.mqtt.metricsTopic }}"
-  ALLOW_NON_INFERENCE_FRAMES: "{{ .Values.nvr.mqtt.nonInferenceEvents }}"
-  ALLOW_NON_MOTION_FRAMES: "{{ .Values.nvr.mqtt.nonMotionEvents }}"
-  MOTION_ACTIVE_INTERVAL: "{{ .Values.nvr.motion.activeInterval }}"
-  MOTION_INACTIVE_INTERVAL: "{{ .Values.nvr.motion.inactiveInterval }}"
-  PERIPHERAL_TYPE: "{{ .Values.nvr.camera.type }}"
-  PERIPHERAL_NAME: "{{ include "nvr.fullname" . }}"
+  DEBUG_LEVEL: "{{ default $.Values.defaults.debugLevel .debugLevel }}"
+  MQTT_CLIENT_ID: "{{ .name }}"
+  MQTT_SERVICE_HOST: "{{ default $.Values.defaults.mqtt.broker (default (dict "broker" $.Values.defaults.mqtt.broker) .mqtt).broker }}"
+  MQTT_SERVICE_PORT: "{{ default $.Values.defaults.mqtt.port (default (dict "port" $.Values.defaults.mqtt.port) .mqtt).port }}"
+  MQTT_QOS: "{{ default $.Values.defaults.mqtt.qos (default (dict "qos" $.Values.defaults.mqtt.qos) .mqtt).qos }}"
+  MQTT_KEEP_ALIVE_INTERVAL: "{{ default $.Values.defaults.mqtt.keepAliveInterval (default (dict "keepAliveInterval" $.Values.defaults.mqtt.keepAliveInterval) .mqtt).keepAliveInterval }}"
+  MQTT_CONNECT_RETRY_INTERVAL: "{{ default $.Values.defaults.mqtt.connectRetryInterval (default (dict "connectRetryInterval" $.Values.defaults.mqtt.connectRetryInterval) .mqtt).connectRetryInterval }}"
+  MQTT_OUT_PREFIX: "{{ default $.Values.defaults.mqtt.topicPrefix (default (dict "topicPrefix" $.Values.defaults.mqtt.topicPrefix) .mqtt).topicPrefix }}"
+  MQTT_QUEUE_LIMIT: "{{ default $.Values.defaults.mqtt.queueLimit (default (dict "queueLimit" $.Values.defaults.mqtt.queueLimit) .mqtt).queueLimit }}"
+  ENABLE_MQTT_STATE: "{{ default $.Values.defaults.mqtt.metrics (default (dict "metrics" $.Values.defaults.mqtt.metrics) .mqtt).metrics }}"
+  METRICS_STATE_TOPIC: "{{ default $.Values.defaults.mqtt.metricsTopic (default (dict "metricsTopic" $.Values.defaults.mqtt.metricsTopic) .mqtt).metricsTopic }}"
+  ALLOW_NON_INFERENCE_FRAMES: "{{ default $.Values.defaults.mqtt.nonInferenceEvents (default (dict "nonInferenceEvents" $.Values.defaults.mqtt.nonInferenceEvents) .mqtt).nonInferenceEvents }}"
+  ALLOW_NON_MOTION_FRAMES: "{{ default $.Values.defaults.mqtt.nonMotionEvents (default (dict "nonMotionEvents" $.Values.defaults.mqtt.nonMotionEvents) .mqtt).nonMotionEvents }}"
+  MOTION_ACTIVE_INTERVAL: "{{ default $.Values.defaults.motion.activeInterval (default (dict "activeInterval" $.Values.defaults.motion.activeInterval) .motion).activeInterval }}"
+  MOTION_INACTIVE_INTERVAL: "{{ default $.Values.defaults.motion.inactiveInterval (default (dict "inactiveInterval" $.Values.defaults.motion.inactiveInterval) .motion).inactiveInterval }}"
+  PERIPHERAL_TYPE: "{{ default $.Values.defaults.camera.type (default (dict "type" $.Values.defaults.camera.type) .camera).type }}"
+  PERIPHERAL_NAME: "{{ .name }}"
   # Variable substitution in GST_PIPELINE_TEMPLATE replaces "camera_id"
-  PERIPHERAL_ID: "{{ include "nvr.fullname" . }}"
+  PERIPHERAL_ID: "{{ .name }}"
   # Variable substitution in GST_PIPELINE_TEMPLATE replaces "uri"
-  PERIPHERAL_STREAM_URI: "{{ .Values.nvr.camera.uri }}"
-  GST_PIPELINE_TEMPLATE: "{{ .Values.nvr.camera.pipeline }}"
+  PERIPHERAL_STREAM_URI: "{{ default $.Values.defaults.camera.uri (default (dict "uri" $.Values.defaults.camera.uri) .camera).uri }}"
+  GST_PIPELINE_TEMPLATE: "{{ default $.Values.defaults.camera.pipeline (default (dict "pipeline" $.Values.defaults.camera.pipeline) .camera).pipeline }}"
   # Deprecated in favor of ORG TREE
-  LOCATION_COUNTRY: "{{ .Values.nvr.location.country }}"
-  LOCATION_REGION: "{{ .Values.nvr.location.region }}"
-  LOCATION_BRANCH: "{{ .Values.nvr.location.branch }}"
-  LOCATION_FACILITY: "{{ .Values.nvr.location.facility }}"
-  LOCATION_SITE: "{{ .Values.nvr.location.site }}"
-  LOCATION_ZONE: "{{ .Values.nvr.location.zone }}"
-  LOCATION_GROUP: "{{ .Values.nvr.location.group }}"
+  LOCATION_COUNTRY: "{{ default $.Values.defaults.location.country (default (dict "country" $.Values.defaults.location.country) .location).country }}"
+  LOCATION_REGION: "{{ default $.Values.defaults.location.region (default (dict "region" $.Values.defaults.location.region) .location).region }}"
+  LOCATION_BRANCH: "{{ default $.Values.defaults.location.branch (default (dict "branch" $.Values.defaults.location.branch) .location).branch }}"
+  LOCATION_FACILITY: "{{ default $.Values.defaults.location.facility (default (dict "facility" $.Values.defaults.location.facility) .location).facility }}"
+  LOCATION_SITE: "{{ default $.Values.defaults.location.site (default (dict "site" $.Values.defaults.location.site) .location).site }}"
+  LOCATION_ZONE: "{{ default $.Values.defaults.location.zone (default (dict "zone" $.Values.defaults.location.zone) .location).zone }}"
+  LOCATION_GROUP: "{{ default $.Values.defaults.location.group (default (dict "group" $.Values.defaults.location.group) .location).group }}"
+{{- end }}

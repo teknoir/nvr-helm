@@ -1,5 +1,10 @@
-# Values needed for Teknoir AI NVR
-nvr:
+# Example for minimal configuration
+instances:
+  - name: camera-default-name
+
+# Values possible for Teknoir AI NVRs
+defaults:
+  name: camera-default-name
   camera:
     type: camera
     uri: rtsp://host:port/path
@@ -7,9 +12,6 @@ nvr:
     # - uri: nvr.camera.uri
     # - camera_id: release full name | fullnameOverride
     pipeline: videotestsrc ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),width=1920,height=1080 ! tee name=t t. ! nvvideoconvert ! video/x-raw(memory:NVMM),width=[1,1920],height=[1,1080],pixel-aspect-ratio=1/1 ! nvvideoconvert ! queue ! nvjpegenc quality=55 ! appsink sync=0 name=mqttsink t. ! nvvideoconvert ! video/x-raw,format=RGB,width=[1,640],height=[1,360],pixel-aspect-ratio=1/1 ! nvvideoconvert ! motioncells threshold=0.0001 gridx=32 gridy=18 ! fakesink
-  # This is to override the chart name.
-  nameOverride: ""
-  fullnameOverride: ""
   # The path to the models directory
   modelRepositoryPath: /opt/teknoir/models
   # The path to the video storage
@@ -53,12 +55,12 @@ nvr:
   healthz:
     fpsThreshold: 0.01
   resources:
-     limits:
-       cpu: 2000m
-       memory: 2048Mi
-     requests:
-       cpu: 100m
-       memory: 128Mi
+    limits:
+      cpu: 2000m
+      memory: 2048Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
   nvdsanalytics:
     enabled: false
     # Mount path for the nvdsanalytics config file: <mountPath>/config_nvdsanalytics.txt
@@ -86,6 +88,4 @@ nvr:
     site: "interior"
     zone: "test"
     group: "poc"
-
-
 
