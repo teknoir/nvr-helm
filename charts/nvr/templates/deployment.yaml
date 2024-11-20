@@ -61,6 +61,8 @@ spec:
         - name: nvdsanalytics-config
           configMap:
             name: {{ include "nvr.analyticsConfigmapName" . }}
+            items:
+              - key: config_nvdsanalytics.txt
         {{- end }}
         # Nvidia has the argus socket mounted under /tmp/argus_socket
         - name: tmp
