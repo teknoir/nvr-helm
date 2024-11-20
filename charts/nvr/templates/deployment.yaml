@@ -41,6 +41,11 @@ spec:
               mountPath: /models
             - name: video-storage
               mountPath: /app/videos
+            {{- if .Values.nvr.nvdsanalytics.enabled }}
+            - name: nvdsanalytics-config
+              mountPath: {{ .Values.nvr.nvdsanalytics.mountPath }}
+              subPath: config_nvdsanalytics.txt
+            {{- end }}
             - name: tmp
               mountPath: /tmp
       volumes:
@@ -52,6 +57,11 @@ spec:
           hostPath:
             path: {{ .Values.nvr.videoStoragePath }}
             type: DirectoryOrCreate
+        {{- if .Values.nvr.nvdsanalytics.enabled }}
+        - name: nvdsanalytics-config
+          configMap:
+            name: {{ include "nvr.analyticsConfigmapName" . }}
+        {{- end }}
         # Nvidia has the argus socket mounted under /tmp/argus_socket
         - name: tmp
           hostPath:

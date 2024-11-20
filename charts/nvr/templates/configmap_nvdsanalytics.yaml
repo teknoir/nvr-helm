@@ -1,0 +1,9 @@
+{{- if .Values.nvr.nvdsanalytics.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "nvr.analyticsConfigmapName" . }}
+data:
+  config_nvdsanalytics.txt: |
+    {{- .Values.nvr.nvdsanalytics.config | nindent 4 }}
+{{- end -}}

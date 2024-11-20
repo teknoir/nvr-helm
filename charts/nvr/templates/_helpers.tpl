@@ -11,8 +11,8 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "nvr.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- if .Values.nvr.fullnameOverride }}
+{{- .Values.nvr.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
 {{- $name := default .Chart.Name .Values.nameOverride }}
 {{- if contains $name .Release.Name }}
@@ -24,8 +24,15 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
-Generate the ConfigMap name.
+Generate the Environment Variable ConfigMap name.
 */}}
 {{- define "nvr.configmapName" -}}
 {{- printf "%s-env-config" (include "nvr.fullname" .) }}
+{{- end }}
+
+{{/*
+Generate the NvDsAnalytics ConfigMap name.
+*/}}
+{{- define "nvr.analyticsConfigmapName" -}}
+{{- printf "%s-analytics-config" (include "nvr.fullname" .) }}
 {{- end }}
