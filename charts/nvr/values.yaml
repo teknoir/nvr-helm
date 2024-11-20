@@ -61,7 +61,8 @@ nvr:
        memory: 128Mi
   nvdsanalytics:
     enabled: false
-    mountPath: /app/config/config_nvdsanalytics.txt
+    # Mount path for the nvdsanalytics config file: <mountPath>/config_nvdsanalytics.txt
+    mountPath: /app/config
     config: |
       [property]
       enable=1
