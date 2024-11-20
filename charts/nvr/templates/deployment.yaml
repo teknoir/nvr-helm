@@ -46,7 +46,7 @@ spec:
               mountPath: /app/videos
             {{- if (default $.Values.defaults.nvdsanalytics.enabled (default (dict "enabled" $.Values.defaults.nvdsanalytics.enabled) .nvdsanalytics).enabled) }}
             - name: nvdsanalytics-config
-              mountPath: {{ default $.Values.defaults.mountPath (default (dict "mountPath" $.Values.defaults.nvdsanalytics.mountPath) .nvdsanalytics).mountPath }}
+              mountPath: {{ default $.Values.defaults.nvdsanalytics.mountPath (default (dict "mountPath" $.Values.defaults.nvdsanalytics.mountPath) .nvdsanalytics).mountPath }}
             {{- end }}
             - name: tmp
               mountPath: /tmp
