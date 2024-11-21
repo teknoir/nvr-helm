@@ -36,7 +36,7 @@ spec:
       # The path to the models directory
       modelRepositoryPath: /opt/teknoir/models
       # The path to the video storage
-      videoStoragePath: /tmp/teknoir/videos
+      videoStoragePath: /opt/teknoir/video/segments
       # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
       image:
         repository: us-docker.pkg.dev/teknoir/gcr.io/nvr
