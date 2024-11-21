@@ -67,18 +67,11 @@ defaults:
     mountPath: /app/config
     config: |
       [property]
-      enable=1
+      enable=0
       config-width=1920
       config-height=1080
-      osd-mode=2
+      osd-mode=0
       display-font-size=25
-
-      [line-crossing-stream-0]
-      enable=1
-      line-crossing-Entry-0=59;591;153;557;200;688;106;426
-      line-crossing-Exit-0=247;523;153;557;106;426;200;688
-      line-crossing-Entry-1=1607;566;1508;550;1568;183;1448;917
-      line-crossing-Exit-1=1410;534;1508;550;1448;917;1568;183
   # Deprecated in favor of ORG TREE
   location:
     country: "us"
