@@ -7,6 +7,8 @@ metadata:
   namespace: {{ $.Release.Namespace }}
   labels:
     app: {{ .name }}
+  annotations:
+    {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 4 }}
 data:
   DEBUG_LEVEL: "{{ default $.Values.defaults.debugLevel .debugLevel }}"
   MQTT_CLIENT_ID: "{{ .name }}"

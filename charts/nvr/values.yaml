@@ -5,6 +5,8 @@ instances:
 # Values possible for Teknoir AI NVRs
 defaults:
   name: camera-default-name
+  annotations:
+    teknoir.org/managed-by: devstudio
   camera:
     type: camera
     uri: rtsp://host:port/path

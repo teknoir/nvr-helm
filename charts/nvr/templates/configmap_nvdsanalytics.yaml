@@ -8,6 +8,8 @@ metadata:
   namespace: {{ $.Release.Namespace }}
   labels:
     app: {{ .name }}
+  annotations:
+    {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 4 }}
 data:
   config_nvdsanalytics.txt: |
     {{- (default $.Values.defaults.nvdsanalytics.config (default (dict "config" $.Values.defaults.nvdsanalytics.config) .nvdsanalytics).config) | nindent 4 }}

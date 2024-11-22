@@ -5,6 +5,8 @@ kind: Deployment
 metadata:
   name: {{ .name }}
   namespace: {{ $.Release.Namespace }}
+  annotations:
+    {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 4 }}
 spec:
   replicas: 1
   strategy:
@@ -21,6 +23,7 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/path: "/metrics"
         prometheus.io/port: "8000"
+        {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 8 }}
     spec:
       runtimeClassName: nvidia
       containers:
