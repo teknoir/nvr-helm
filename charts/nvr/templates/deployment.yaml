@@ -23,6 +23,8 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/path: "/metrics"
         prometheus.io/port: "8000"
+        checksum/config/env: {{ include (print $.Template.BasePath "/configmap_env.yaml") $ | sha256sum }}
+        checksum/config/nvdsanalytics: {{ include (print $.Template.BasePath "/configmap_nvdsanalytics.yaml") $ | sha256sum }}
         {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 8 }}
     spec:
       runtimeClassName: nvidia

@@ -59,7 +59,7 @@ defaults:
   resources:
     limits:
       cpu: 2000m
-      memory: 2048Mi
+      memory: 4096Mi
     requests:
       cpu: 100m
       memory: 128Mi
