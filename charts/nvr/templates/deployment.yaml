@@ -28,9 +28,9 @@ spec:
         {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 8 }}
     spec:
       runtimeClassName: nvidia
-{{- if not (empty .Values.trackers) }}
+{{- if not (empty (default $.Values.defaults.trackers .trackers)) }}
       initContainers:
-{{- range .Values.trackers }}
+{{- range (default $.Values.defaults.trackers .trackers) }}
         - name: init-container-{{ .name }}
           image: {{ .image }}
           imagePullPolicy: Always
