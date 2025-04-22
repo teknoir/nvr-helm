@@ -28,6 +28,17 @@ spec:
         {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 8 }}
     spec:
       runtimeClassName: nvidia
+{{- if not (empty .Values.trackers) }}
+      initContainers:
+{{- range .Values.trackers }}
+        - name: init-container-{{ .name }}
+          image: {{ .image }}
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: tracker-volume
+              mountPath: /trackers
+{{- end }}
+{{- end }}
       containers:
         - name: {{ $.Chart.Name }}
           image: "{{ default $.Values.defaults.image.repository (default (dict "repository" $.Values.defaults.image.repository) .image).repository }}:{{ default $.Values.defaults.image.tag (default (dict "tag" $.Values.defaults.image.tag) .image).tag }}"
@@ -47,6 +58,8 @@ spec:
           volumeMounts:
             - name: model-volume
               mountPath: /models
+            - name: tracker-volume
+              mountPath: /trackers
             - name: video-storage
               mountPath: /app/videos
             {{- if (default $.Values.defaults.nvdsanalytics.enabled (default (dict "enabled" $.Values.defaults.nvdsanalytics.enabled) .nvdsanalytics).enabled) }}
@@ -59,6 +72,10 @@ spec:
         - name: model-volume
           hostPath:
             path: {{ default $.Values.defaults.modelRepositoryPath .modelRepositoryPath }}
+            type: DirectoryOrCreate
+        - name: tracker-volume
+          hostPath:
+            path: {{ default $.Values.defaults.trackerRepositoryPath .trackerRepositoryPath }}
             type: DirectoryOrCreate
         - name: video-storage
           hostPath:
