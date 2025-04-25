@@ -66,6 +66,10 @@ spec:
             - name: nvdsanalytics-config
               mountPath: {{ default $.Values.defaults.nvdsanalytics.mountPath (default (dict "mountPath" $.Values.defaults.nvdsanalytics.mountPath) .nvdsanalytics).mountPath }}
             {{- end }}
+            {{- if (default $.Values.defaults.nvdewarper.enabled (default (dict "enabled" $.Values.defaults.nvdewarper.enabled) .nvdewarper).enabled) }}
+            - name: nvdewarper-config
+              mountPath: {{ default $.Values.defaults.nvdewarper.mountPath (default (dict "mountPath" $.Values.defaults.nvdewarper.mountPath) .nvdewarper).mountPath }}
+            {{- end }}
             - name: tmp
               mountPath: /tmp
       volumes:
