@@ -3,6 +3,16 @@ entries:
   nvr:
   - apiVersion: v2
     appVersion: 7.0.0
+    created: "2025-04-25T13:12:51.111569841Z"
+    description: A Helm chart for Teknoir AI NVRs
+    digest: 703ceede746c1218392691fba38553d7ac7d876b330aa73824f281340bd8f848
+    name: nvr
+    type: application
+    urls:
+    - https://github.com/teknoir/nvr-helm/releases/download/nvr-0.2.9-dewarper.3/nvr-0.2.9-dewarper.3.tgz
+    version: 0.2.9-dewarper.3
+  - apiVersion: v2
+    appVersion: 7.0.0
     created: "2025-04-25T13:03:38.29500425Z"
     description: A Helm chart for Teknoir AI NVRs
     digest: a1b5eeec75c19a7b244cb40cc4f7f2fb77811d7e4a28e3e91a86fe26e7f4f704
@@ -211,4 +221,4 @@ entries:
     urls:
     - https://github.com/teknoir/nvr-helm/releases/download/nvr-0.0.2/nvr-0.0.2.tgz
     version: 0.0.2
-generated: "2025-04-25T13:03:38.295209875Z"
+generated: "2025-04-25T13:12:51.111777098Z"
