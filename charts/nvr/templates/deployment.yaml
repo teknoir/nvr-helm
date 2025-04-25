@@ -89,7 +89,7 @@ spec:
         {{- if (default $.Values.defaults.nvdewarper.enabled (default (dict "enabled" $.Values.defaults.nvdewarper.enabled) .nvdewarper).enabled) }}
         - name: nvdewarper-config
           configMap:
-            name: {{ .name }}-analytics-config
+            name: {{ .name }}-dewarper-config
         {{- end }}
         # Nvidia has the argus socket mounted under /tmp/argus_socket
         - name: tmp

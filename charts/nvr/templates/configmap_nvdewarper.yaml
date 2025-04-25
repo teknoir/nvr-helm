@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .name }}-analytics-config
+  name: {{ .name }}-dewarper-config
   namespace: {{ $.Release.Namespace }}
   labels:
     app: {{ .name }}
