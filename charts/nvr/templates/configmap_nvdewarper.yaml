@@ -1,0 +1,17 @@
+{{- range .Values.instances }}
+{{- if (default $.Values.defaults.nvdewarper.enabled (default (dict "enabled" $.Values.defaults.nvdewarper.enabled) .nvdewarper).enabled) }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .name }}-analytics-config
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app: {{ .name }}
+  annotations:
+    {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 4 }}
+data:
+  config_nvdewarper.txt: |
+    {{- (default $.Values.defaults.nvdewarper.config (default (dict "config" $.Values.defaults.nvdewarper.config) .nvdewarper).config) | nindent 4 }}
+{{- end -}}
+{{- end }}

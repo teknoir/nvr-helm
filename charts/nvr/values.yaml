@@ -78,6 +78,26 @@ defaults:
       config-height=1080
       osd-mode=0
       display-font-size=25
+  nvdewarper:
+    enabled: false
+    # Mount path for the nvdewarper config file: <mountPath>/config_nvdewarper.txt
+    mountPath: /app/config
+    config: |
+      [property]
+      output-width=1920
+      output-height=1080
+      num-batch-buffers=1
+      [surface0]
+      projection-type=7
+      surface-index=0
+      width=1920
+      height=1080
+      top-angle=90
+      bottom-angle=-90
+      pitch=53
+      yaw=0
+      roll=0
+      src-fov=180
   # Deprecated in favor of ORG TREE
   location:
     country: "us"
