@@ -60,6 +60,10 @@ defaults:
     activeInterval: 0
   healthz:
     fpsThreshold: 0.01
+  livenessProbe:
+    initialDelaySeconds: 60
+    periodSeconds: 6
+    failureThreshold: 10
   resources:
     limits:
       cpu: 2000m

@@ -48,9 +48,9 @@ spec:
             httpGet:
               path: /healthz
               port: 8000
-            initialDelaySeconds: 60
-            periodSeconds: 6
-            failureThreshold: 10
+            initialDelaySeconds: {{ default $.Values.defaults.livenessProbe.initialDelaySeconds (default (dict "initialDelaySeconds" $.Values.defaults.livenessProbe.initialDelaySeconds) .livenessProbe).initialDelaySeconds }}
+            periodSeconds: {{ default $.Values.defaults.livenessProbe.periodSeconds (default (dict "periodSeconds" $.Values.defaults.livenessProbe.periodSeconds) .livenessProbe).periodSeconds }}
+            failureThreshold: {{ default $.Values.defaults.livenessProbe.failureThreshold (default (dict "failureThreshold" $.Values.defaults.livenessProbe.failureThreshold) .livenessProbe).failureThreshold }}
           envFrom:
             - configMapRef:
                 name: {{ .name }}-env-config
