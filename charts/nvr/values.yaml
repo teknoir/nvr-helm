@@ -16,6 +16,10 @@ defaults:
     pipeline: videotestsrc ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),width=1920,height=1080 ! tee name=t t. ! nvvideoconvert ! video/x-raw(memory:NVMM),width=[1,1920],height=[1,1080],pixel-aspect-ratio=1/1 ! nvvideoconvert ! queue ! nvjpegenc quality=55 ! appsink sync=0 name=mqttsink t. ! nvvideoconvert ! video/x-raw,format=RGB,width=[1,640],height=[1,360],pixel-aspect-ratio=1/1 ! nvvideoconvert ! motioncells threshold=0.0001 gridx=32 gridy=18 ! fakesink
   # The path to the models directory
   modelRepositoryPath: /opt/teknoir/models
+  # Trackers to be installed via a shared mounted host path (volume)
+  trackers: []
+  # The path to the tracker directory
+  trackerRepositoryPath: /opt/teknoir/trackers
   # The path to the video storage
   videoStoragePath: /opt/teknoir/video/segments
   # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
@@ -66,7 +70,7 @@ defaults:
   nvdsanalytics:
     enabled: false
     # Mount path for the nvdsanalytics config file: <mountPath>/config_nvdsanalytics.txt
-    mountPath: /app/config
+    mountPath: /app/nvdsanalytics_config
     config: |
       [property]
       enable=0
@@ -74,6 +78,31 @@ defaults:
       config-height=1080
       osd-mode=0
       display-font-size=25
+  nvdewarper:
+    enabled: false
+    # Mount path for the nvdewarper config file: <mountPath>/config_nvdewarper.txt
+    mountPath: /app/nvdewarper_config
+    config: |
+      [property]
+       enable=0
+       source-id=0
+       output-width=1920
+       output-height=1080
+       num-batch-buffers=1
+       [surface0]
+       surface-index=0
+       projection-type=4
+       width=2560
+       height=1440
+       rot-axes=ZXY
+       pitch=50
+       yaw=0
+       roll=0
+       src-fov=180
+       src-x0=2000
+       src-y0=1500
+       focal-length=960
+       distortion=0;0;0;0
   # Deprecated in favor of ORG TREE
   location:
     country: "us"

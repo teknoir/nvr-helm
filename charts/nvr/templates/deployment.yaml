@@ -24,10 +24,22 @@ spec:
         prometheus.io/path: "/metrics"
         prometheus.io/port: "8000"
         checksum/config-env: {{ include (print $.Template.BasePath "/configmap_env.yaml") $ | sha256sum }}
-        checksum/config-nvdsanalytics: {{ include (print $.Template.BasePath "/configmap_nvdsanalytics.yaml") $ | sha256sum }}
+        checksum/config-nvdsanalytics: {{ (default $.Values.defaults.nvdsanalytics.config (default (dict "config" $.Values.defaults.nvdsanalytics.config) .nvdsanalytics).config) | toJson | sha256sum }}
+        checksum/config-nvdewarper: {{ (default $.Values.defaults.nvdewarper.config (default (dict "config" $.Values.defaults.nvdewarper.config) .nvdewarper).config) | toJson | sha256sum }}
         {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 8 }}
     spec:
       runtimeClassName: nvidia
+{{- if not (empty (default $.Values.defaults.trackers .trackers)) }}
+      initContainers:
+{{- range (default $.Values.defaults.trackers .trackers) }}
+        - name: init-container-{{ .name }}
+          image: {{ .image }}
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: tracker-volume
+              mountPath: /trackers
+{{- end }}
+{{- end }}
       containers:
         - name: {{ $.Chart.Name }}
           image: "{{ default $.Values.defaults.image.repository (default (dict "repository" $.Values.defaults.image.repository) .image).repository }}:{{ default $.Values.defaults.image.tag (default (dict "tag" $.Values.defaults.image.tag) .image).tag }}"
@@ -47,11 +59,17 @@ spec:
           volumeMounts:
             - name: model-volume
               mountPath: /models
+            - name: tracker-volume
+              mountPath: /trackers
             - name: video-storage
               mountPath: /app/videos
             {{- if (default $.Values.defaults.nvdsanalytics.enabled (default (dict "enabled" $.Values.defaults.nvdsanalytics.enabled) .nvdsanalytics).enabled) }}
             - name: nvdsanalytics-config
               mountPath: {{ default $.Values.defaults.nvdsanalytics.mountPath (default (dict "mountPath" $.Values.defaults.nvdsanalytics.mountPath) .nvdsanalytics).mountPath }}
+            {{- end }}
+            {{- if (default $.Values.defaults.nvdewarper.enabled (default (dict "enabled" $.Values.defaults.nvdewarper.enabled) .nvdewarper).enabled) }}
+            - name: nvdewarper-config
+              mountPath: {{ default $.Values.defaults.nvdewarper.mountPath (default (dict "mountPath" $.Values.defaults.nvdewarper.mountPath) .nvdewarper).mountPath }}
             {{- end }}
             - name: tmp
               mountPath: /tmp
@@ -59,6 +77,10 @@ spec:
         - name: model-volume
           hostPath:
             path: {{ default $.Values.defaults.modelRepositoryPath .modelRepositoryPath }}
+            type: DirectoryOrCreate
+        - name: tracker-volume
+          hostPath:
+            path: {{ default $.Values.defaults.trackerRepositoryPath .trackerRepositoryPath }}
             type: DirectoryOrCreate
         - name: video-storage
           hostPath:
@@ -68,6 +90,11 @@ spec:
         - name: nvdsanalytics-config
           configMap:
             name: {{ .name }}-analytics-config
+        {{- end }}
+        {{- if (default $.Values.defaults.nvdewarper.enabled (default (dict "enabled" $.Values.defaults.nvdewarper.enabled) .nvdewarper).enabled) }}
+        - name: nvdewarper-config
+          configMap:
+            name: {{ .name }}-dewarper-config
         {{- end }}
         # Nvidia has the argus socket mounted under /tmp/argus_socket
         - name: tmp
