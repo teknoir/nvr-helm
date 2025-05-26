@@ -1,4 +1,10 @@
+{{- define "pipelineValues" }}
+uri: "{{ default (default (dict "uri" "{{.uri}}") .camera).uri "{{.uri}}" }}"
+camera_id: "{{ .name }}"
+{{- end }}
+
 {{- range .Values.instances }}
+{{- $pipelineValues := (include "pipelineValues" . | fromYaml) -}}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -31,7 +37,7 @@ data:
   PERIPHERAL_ID: "{{ .name }}"
   # Variable substitution in GST_PIPELINE_TEMPLATE replaces "uri"
   PERIPHERAL_STREAM_URI: "{{ default $.Values.defaults.camera.uri (default (dict "uri" $.Values.defaults.camera.uri) .camera).uri }}"
-  GST_PIPELINE_TEMPLATE: "{{ tpl (default $.Values.defaults.camera.pipeline (default (dict "pipeline" $.Values.defaults.camera.pipeline) .camera).pipeline) . }}"
+  GST_PIPELINE_TEMPLATE: "{{ tpl (default $.Values.defaults.camera.pipeline (default (dict "pipeline" $.Values.defaults.camera.pipeline) .camera).pipeline) $pipelineValues }}"
   # Deprecated in favor of ORG TREE
   LOCATION_COUNTRY: "{{ default $.Values.defaults.location.country (default (dict "country" $.Values.defaults.location.country) .location).country }}"
   LOCATION_REGION: "{{ default $.Values.defaults.location.region (default (dict "region" $.Values.defaults.location.region) .location).region }}"
