@@ -1,10 +1,9 @@
-{{- define "pipelineValues" }}
-uri: "{{ .camera.uri }}"
-camera_id: "{{ .name }}"
-{{- end }}
-
 {{- range .Values.instances }}
-{{- $pipelineValues := (include "pipelineValues" . | fromYaml) -}}
+# Added to support Helm templated Pipelines
+{{- $pipelineValues := (dict
+  "uri" (default $.Values.defaults.camera.uri (default (dict "uri" $.Values.defaults.camera.uri) .camera).uri)
+  "camera_id" .name
+) -}}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -37,13 +36,5 @@ data:
   PERIPHERAL_ID: "{{ .name }}"
   # Variable substitution in GST_PIPELINE_TEMPLATE replaces "uri"
   PERIPHERAL_STREAM_URI: "{{ default $.Values.defaults.camera.uri (default (dict "uri" $.Values.defaults.camera.uri) .camera).uri }}"
-  GST_PIPELINE_TEMPLATE: "{{ tpl (default $.Values.defaults.camera.pipeline (default (dict "pipeline" $.Values.defaults.camera.pipeline) .camera).pipeline) $pipelineValues }}"
-  # Deprecated in favor of ORG TREE
-  LOCATION_COUNTRY: "{{ default $.Values.defaults.location.country (default (dict "country" $.Values.defaults.location.country) .location).country }}"
-  LOCATION_REGION: "{{ default $.Values.defaults.location.region (default (dict "region" $.Values.defaults.location.region) .location).region }}"
-  LOCATION_BRANCH: "{{ default $.Values.defaults.location.branch (default (dict "branch" $.Values.defaults.location.branch) .location).branch }}"
-  LOCATION_FACILITY: "{{ default $.Values.defaults.location.facility (default (dict "facility" $.Values.defaults.location.facility) .location).facility }}"
-  LOCATION_SITE: "{{ default $.Values.defaults.location.site (default (dict "site" $.Values.defaults.location.site) .location).site }}"
-  LOCATION_ZONE: "{{ default $.Values.defaults.location.zone (default (dict "zone" $.Values.defaults.location.zone) .location).zone }}"
-  LOCATION_GROUP: "{{ default $.Values.defaults.location.group (default (dict "group" $.Values.defaults.location.group) .location).group }}"
+  GST_PIPELINE_TEMPLATE: "{{- tpl (default $.Values.defaults.camera.pipeline (default (dict "pipeline" $.Values.defaults.camera.pipeline) .camera).pipeline) $pipelineValues -}}"
 {{- end }}
