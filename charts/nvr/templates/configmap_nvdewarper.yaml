@@ -12,6 +12,6 @@ metadata:
     {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 4 }}
 data:
   config_nvdewarper.txt: |
-    {{- (default $.Values.defaults.nvdewarper.config (default (dict "config" $.Values.defaults.nvdewarper.config) .nvdewarper).config) | nindent 4 }}
+    {{- tpl (default $.Values.defaults.nvdewarper.config (default (dict "config" $.Values.defaults.nvdewarper.config) .nvdewarper).config) . | nindent 4 }}
 {{- end -}}
 {{- end }}
