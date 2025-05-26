@@ -4,5 +4,5 @@ description: A Helm chart for Teknoir AI NVRs
 
 
 type: application
-version: 0.2.12-beta.5
+version: 0.2.12-beta.6
 appVersion: "7.0.0"

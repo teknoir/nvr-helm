@@ -3,6 +3,8 @@
 {{- $pipelineValues := (dict
   "uri" (default $.Values.defaults.camera.uri (default (dict "uri" $.Values.defaults.camera.uri) .camera).uri)
   "camera_id" .name
+  "name" .name
+  "camera" .camera
 ) -}}
 ---
 apiVersion: v1
