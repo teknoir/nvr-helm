@@ -24,8 +24,8 @@ spec:
         prometheus.io/path: "/metrics"
         prometheus.io/port: "8000"
         checksum/config-env: {{ include (print $.Template.BasePath "/configmap_env.yaml") $ | sha256sum }}
-        checksum/config-nvdsanalytics: {{ (default $.Values.defaults.nvdsanalytics.config (default (dict "config" $.Values.defaults.nvdsanalytics.config) .nvdsanalytics).config) | toJson | sha256sum }}
-        checksum/config-nvdewarper: {{ (default $.Values.defaults.nvdewarper.config (default (dict "config" $.Values.defaults.nvdewarper.config) .nvdewarper).config) | toJson | sha256sum }}
+        checksum/config-nvdsanalytics: {{ tpl (default $.Values.defaults.nvdsanalytics.config (default (dict "config" $.Values.defaults.nvdsanalytics.config) .nvdsanalytics).config) . | toJson | sha256sum }}
+        checksum/config-nvdewarper: {{ tpl (default $.Values.defaults.nvdewarper.config (default (dict "config" $.Values.defaults.nvdewarper.config) .nvdewarper).config) . | toJson | sha256sum }}
         {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 8 }}
     spec:
       runtimeClassName: nvidia
