@@ -1,5 +1,5 @@
 {{- range .Values.instances }}
-# Added to support Helm templated Pipelines
+{{/*# Added to support Helm templated Pipelines*/}}
 {{- $pipelineValues := (dict
   "uri" (default $.Values.defaults.camera.uri (default (dict "uri" $.Values.defaults.camera.uri) .camera).uri)
   "camera_id" .name
