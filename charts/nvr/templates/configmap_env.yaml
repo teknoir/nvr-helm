@@ -1,5 +1,5 @@
 {{- define "pipelineValues" }}
-uri: "{{ default (default (dict "uri" "{{.uri}}") .camera).uri "{{.uri}}" }}"
+uri: "{{ .camera.uri }}"
 camera_id: "{{ .name }}"
 {{- end }}
 
