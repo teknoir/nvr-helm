@@ -14,6 +14,7 @@ defaults:
     # - uri: nvr.camera.uri
     # - camera_id: release full name | fullnameOverride
     pipeline: videotestsrc ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),width=1920,height=1080 ! tee name=t t. ! nvvideoconvert ! video/x-raw(memory:NVMM),width=[1,1920],height=[1,1080],pixel-aspect-ratio=1/1 ! nvvideoconvert ! queue ! nvjpegenc quality=55 ! appsink sync=0 name=mqttsink t. ! nvvideoconvert ! video/x-raw,format=RGB,width=[1,640],height=[1,360],pixel-aspect-ratio=1/1 ! nvvideoconvert ! motioncells threshold=0.0001 gridx=32 gridy=18 ! fakesink
+    pipelineRetryCount: -1
     motion:
       # Number of frames to skip inference when no motion detected
       inactiveInterval: 900

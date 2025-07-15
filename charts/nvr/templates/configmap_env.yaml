@@ -39,4 +39,6 @@ data:
   # Variable substitution in GST_PIPELINE_TEMPLATE replaces "uri"
   PERIPHERAL_STREAM_URI: "{{ default $.Values.defaults.camera.uri (default (dict "uri" $.Values.defaults.camera.uri) .camera).uri }}"
   GST_PIPELINE_TEMPLATE: "{{- tpl (default $.Values.defaults.camera.pipeline (default (dict "pipeline" $.Values.defaults.camera.pipeline) .camera).pipeline) $pipelineValues -}}"
+  # GST_PIPELINE_RETRY_COUNT    int     `default:"-1"`
+  GST_PIPELINE_RETRY_COUNT: "{{ default $.Values.defaults.camera.pipelineRetryCount (default (dict "pipelineRetryCount" $.Values.defaults.camera.pipelineRetryCount) .camera).pipelineRetryCount }}"
 {{- end }}
