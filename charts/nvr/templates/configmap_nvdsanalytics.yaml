@@ -11,7 +11,7 @@ metadata:
   annotations:
     {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 4 }}
 data:
-  config_nvdsanalytics.txt: |
+  config_nvdsanalytics.{{- default "txt" (default $.Values.defaults.nvdsanalytics.configFormat (default (dict "configFormat" $.Values.defaults.nvdsanalytics.configFormat) .nvdsanalytics).configFormat) }}: |
     {{- tpl (default $.Values.defaults.nvdsanalytics.config (default (dict "config" $.Values.defaults.nvdsanalytics.config) .nvdsanalytics).config) . | nindent 4 }}
 {{- end -}}
 {{- end }}
