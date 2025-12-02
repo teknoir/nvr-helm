@@ -3,6 +3,16 @@ entries:
   nvr:
   - apiVersion: v2
     appVersion: 0.2.0
+    created: "2025-12-02T14:28:03.727204589Z"
+    description: A Helm chart for Teknoir AI NVRs
+    digest: 6992948560c29590b51fe8ae3e097a71e1953caca6c1f6eb56ae97058e9ec8ac
+    name: nvr
+    type: application
+    urls:
+    - https://github.com/teknoir/nvr-helm/releases/download/nvr-0.3.0-beta.3/nvr-0.3.0-beta.3.tgz
+    version: 0.3.0-beta.3
+  - apiVersion: v2
+    appVersion: 0.2.0
     created: "2025-12-02T13:10:55.538000862Z"
     description: A Helm chart for Teknoir AI NVRs
     digest: 66446d7bf57cafe483dc745f98a89a36a5e221a433601863376647e157843a57
@@ -441,4 +451,4 @@ entries:
     urls:
     - https://github.com/teknoir/nvr-helm/releases/download/nvr-0.0.2/nvr-0.0.2.tgz
     version: 0.0.2
-generated: "2025-12-02T13:10:55.538517108Z"
+generated: "2025-12-02T14:28:03.727696522Z"
