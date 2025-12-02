@@ -74,6 +74,12 @@ spec:
               id: teknoir-nvr-vid3
             - name: Teknoir-NVR-Vid#4
               id: teknoir-nvr-vid4
+          nvdewarper:
+            enabled: true
+            nvdewarper_1_enabled: true
+            nvdewarper_2_enabled: true
+            nvdewarper_3_enabled: true
+            nvdewarper_4_enabled: true
           pipeline: |-
             rtspsrc location={{.uri}} protocols=tcp latency=500
             ! application/x-rtp,media=video,encoding-name=H264
@@ -87,7 +93,7 @@ spec:
             ! queue ! nvvideoconvert
             ! queue ! motioncells threshold=0.00005 gridx=40 gridy=30 ! fakesink
             src.
-            ! queue ! nvdewarper config-file=/build/mqttsink/nvdewarper/nvdewarper-360-1surface-0.txt
+            ! queue ! nvdewarper config-file=/app/nvdewarper_config/nvdewarper_1_config.txt
             ! queue ! nvmux.sink_0 nvstreammux name=nvmux batch-size=4 width=1920 height=1080
             ! queue ! nvinferserver name=nvis config-file-path=/models/rtdetr-wwfp/rtdetr-wwfp_config.pbtxt unique-id=2 interval=0
             ! queue ! nvtracker tracker-width=960 tracker-height=544 ll-lib-file=/opt/nvidia/deepstream/deepstream/lib/libnvds_nvmultiobjecttracker.so ll-config-file=/trackers/nvidia-tracker/config_tracker_NvDCF_accuracy.yml compute-hw=1 gpu-id=0
@@ -105,7 +111,7 @@ spec:
             ! queue ! nvv4l2h264enc copy-meta=true profile=7 control-rate=1 bitrate=3000000 iframeinterval=5 idrinterval=10
             ! queue ! h264parse ! queue ! splitmuxsink sink=nvdsfilesink muxer-properties=properties,streamable=true,moov-relocation=true send-keyframe-requests=true location=/videos/segments/{{(index .peripherals 0).id}}_%05d.mp4 max-size-time=15000000000 max-files=28
             src.
-            ! queue ! nvdewarper config-file=/build/mqttsink/nvdewarper/nvdewarper-360-1surface-90.txt
+            ! queue ! nvdewarper config-file=/app/nvdewarper_config/nvdewarper_2_config.txt
             ! queue ! nvmux.sink_1
             nvdemux.src_1
             ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),width=[1,1920],height=[1,1080],pixel-aspect-ratio=1/1
@@ -120,7 +126,7 @@ spec:
             ! queue ! nvv4l2h264enc copy-meta=true profile=7 control-rate=1 bitrate=3000000 iframeinterval=5 idrinterval=10
             ! queue ! h264parse ! queue ! splitmuxsink sink=nvdsfilesink muxer-properties=properties,streamable=true,moov-relocation=true send-keyframe-requests=true location=/videos/segments/{{(index .peripherals 1).id}}_%05d.mp4 max-size-time=15000000000 max-files=28
             src.
-            ! queue ! nvdewarper config-file=/build/mqttsink/nvdewarper/nvdewarper-360-1surface-180.txt
+            ! queue ! nvdewarper config-file=/app/nvdewarper_config/nvdewarper_3_config.txt
             ! queue ! nvmux.sink_2
             nvdemux.src_2
             ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),width=[1,1920],height=[1,1080],pixel-aspect-ratio=1/1
@@ -135,7 +141,7 @@ spec:
             ! queue ! nvv4l2h264enc copy-meta=true profile=7 control-rate=1 bitrate=3000000 iframeinterval=5 idrinterval=10
             ! queue ! h264parse ! queue ! splitmuxsink sink=nvdsfilesink muxer-properties=properties,streamable=true,moov-relocation=true send-keyframe-requests=true location=/videos/segments/{{(index .peripherals 2).id}}_%05d.mp4 max-size-time=15000000000 max-files=28
             src.
-            ! queue ! nvdewarper config-file=/build/mqttsink/nvdewarper/nvdewarper-360-1surface-270.txt
+            ! queue ! nvdewarper config-file=/app/nvdewarper_config/nvdewarper_4_config.txt
             ! queue ! nvmux.sink_3
             nvdemux.src_3
             ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),width=[1,1920],height=[1,1080],pixel-aspect-ratio=1/1

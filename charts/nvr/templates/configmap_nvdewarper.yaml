@@ -11,7 +11,25 @@ metadata:
   annotations:
     {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 4 }}
 data:
-  config_nvdewarper.txt: |
-    {{- tpl (default $.Values.defaults.nvdewarper.config (default (dict "config" $.Values.defaults.nvdewarper.config) .nvdewarper).config) . | nindent 4 }}
+{{- if (default $.Values.defaults.nvdewarper.nvdewarper_1_enabled (default (dict "enabled" $.Values.defaults.nvdewarper.nvdewarper_1_enabled) .nvdewarper).nvdewarper_1_enabled) }}  
+  nvdewarper_1_config.txt: |
+    {{- tpl (default $.Values.defaults.nvdewarper.nvdewarper_1_config (default (dict "config" $.Values.defaults.nvdewarper.nvdewarper_1_config) .nvdewarper).nvdewarper_1_config) . | nindent 4 }}
+{{- end -}}
+
+{{- if (default $.Values.defaults.nvdewarper.nvdewarper_2_enabled (default (dict "enabled" $.Values.defaults.nvdewarper.nvdewarper_2_enabled) .nvdewarper).nvdewarper_2_enabled) }}
+  nvdewarper_2_config.txt: |
+    {{- tpl (default $.Values.defaults.nvdewarper.nvdewarper_2_config (default (dict "config" $.Values.defaults.nvdewarper.nvdewarper_2_config) .nvdewarper).nvdewarper_2_config) . | nindent 4 }}
+{{- end -}}
+
+{{- if (default $.Values.defaults.nvdewarper.nvdewarper_3_enabled (default (dict "enabled" $.Values.defaults.nvdewarper.nvdewarper_3_enabled) .nvdewarper).nvdewarper_3_enabled) }}
+  nvdewarper_3_config.txt: |
+    {{- tpl (default $.Values.defaults.nvdewarper.nvdewarper_3_config (default (dict "config" $.Values.defaults.nvdewarper.nvdewarper_3_config) .nvdewarper).nvdewarper_3_config) . | nindent 4 }}
+{{- end -}}
+
+{{- if (default $.Values.defaults.nvdewarper.nvdewarper_4_enabled (default (dict "enabled" $.Values.defaults.nvdewarper.nvdewarper_4_enabled) .nvdewarper).nvdewarper_4_enabled) }}
+  nvdewarper_4_config.txt: |
+    {{- tpl (default $.Values.defaults.nvdewarper.nvdewarper_4_config (default (dict "config" $.Values.defaults.nvdewarper.nvdewarper_4_config) .nvdewarper).nvdewarper_4_config) . | nindent 4 }}
+{{- end -}}    
+
 {{- end -}}
 {{- end }}
