@@ -5,16 +5,27 @@ instances:
 # Values possible for Teknoir AI NVRs
 defaults:
   name: camera-default-name
-  annotations:
-    teknoir.org/managed-by: devstudio
+  annotations: {}
   camera:
     type: camera
     uri: rtsp://host:port/path
     # GST pipeline variable substitution:
     # - uri: nvr.camera.uri
     # - camera_id: release full name | fullnameOverride
-    pipeline: videotestsrc ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),width=1920,height=1080 ! tee name=t t. ! nvvideoconvert ! video/x-raw(memory:NVMM),width=[1,1920],height=[1,1080],pixel-aspect-ratio=1/1 ! nvvideoconvert ! queue ! nvjpegenc quality=55 ! appsink sync=0 name=mqttsink t. ! nvvideoconvert ! video/x-raw,format=RGB,width=[1,640],height=[1,360],pixel-aspect-ratio=1/1 ! nvvideoconvert ! motioncells threshold=0.0001 gridx=32 gridy=18 ! fakesink
-    pipelineRetryCount: -1
+    pipeline: |-
+      videotestsrc is-live=true
+      ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),width=1920,height=1080 ! queue name=src
+      src.
+      ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),width=[1,320],height=[1,240],pixel-aspect-ratio=1/1
+      ! queue ! nvvideoconvert
+      ! queue ! motioncells threshold=0.00005 gridx=32 gridy=24 ! fakesink
+      src.
+      ! queue ! nvvideoconvert
+      ! queue ! nvjpegenc quality=55 ! nvdsmqttsink
+    # One pipeline can define multiple streams that we define by index to a peripheral
+    peripherals:
+      - name: Teknoir-NVR
+        id: teknoir-nvr
     motion:
       # Number of frames to skip inference when no motion detected
       inactiveInterval: 900
@@ -34,7 +45,7 @@ defaults:
     # Overrides the image tag whose default is "ds7.1-gst1.24.12".
     # ds7.1-gst1.24.12: Nvidia Ada Lovelace GPU on AMD64
     # ds7-gst1.24.7-l4t: Nvidia Orin(tegra) on ARM64
-    tag: ds7.1-gst1.24.12
+    tag: ds8.0-gst1.26.8
   # Set the log level for the nvr
   # - DEBUG
   # - INFO
@@ -60,15 +71,17 @@ defaults:
     # Send events without motion detected
     nonMotionEvents: true
   healthz:
-    fpsThreshold: 0.01
+    enabled: true
+    port: 8000
+    threshold: 20.0
   livenessProbe:
-    initialDelaySeconds: 60
+    initialDelaySeconds: 300 # In case the tracker models take long to load
     periodSeconds: 6
     failureThreshold: 10
   resources:
     limits:
       cpu: 2000m
-      memory: 4096Mi
+      memory: 8192Mi
     requests:
       cpu: 100m
       memory: 128Mi
@@ -108,13 +121,5 @@ defaults:
        src-y0=1500
        focal-length=960
        distortion=0;0;0;0
-  # Deprecated in favor of ORG TREE
-  location:
-    country: "us"
-    region: "texas"
-    branch: "houston"
-    facility: "office"
-    site: "interior"
-    zone: "test"
-    group: "poc"
+
 

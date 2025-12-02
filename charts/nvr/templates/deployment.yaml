@@ -20,13 +20,12 @@ spec:
         teknoir.org/app: {{ .name }}
         app: {{ .name }}
       annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/path: "/metrics"
-        prometheus.io/port: "8000"
         checksum/config-env: {{ include (print $.Template.BasePath "/configmap_env.yaml") $ | sha256sum }}
         checksum/config-nvdsanalytics: {{ tpl (default $.Values.defaults.nvdsanalytics.config (default (dict "config" $.Values.defaults.nvdsanalytics.config) .nvdsanalytics).config) . | toJson | sha256sum }}
         checksum/config-nvdewarper: {{ tpl (default $.Values.defaults.nvdewarper.config (default (dict "config" $.Values.defaults.nvdewarper.config) .nvdewarper).config) . | toJson | sha256sum }}
-        {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 8 }}
+{{- with (default $.Values.defaults.annotations .annotations) }}
+{{- toYaml . | nindent 8 }}
+{{- end }}
     spec:
       runtimeClassName: nvidia
 {{- if not (empty (default $.Values.defaults.trackers .trackers)) }}
@@ -42,7 +41,7 @@ spec:
 {{- end }}
       containers:
         - name: {{ $.Chart.Name }}
-          image: "{{ default $.Values.defaults.image.repository (default (dict "repository" $.Values.defaults.image.repository) .image).repository }}:{{ default $.Values.defaults.image.tag (default (dict "tag" $.Values.defaults.image.tag) .image).tag }}"
+          image: {{ default $.Values.defaults.image.repository (default (dict "repository" $.Values.defaults.image.repository) .image).repository }}:{{ default $.Values.defaults.image.tag (default (dict "tag" $.Values.defaults.image.tag) .image).tag }}
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
@@ -101,4 +100,4 @@ spec:
           hostPath:
             path: /tmp
             type: DirectoryOrCreate
-  {{- end }}
+{{- end }}

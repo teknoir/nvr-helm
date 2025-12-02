@@ -2,6 +2,7 @@
 {{/*# Added to support Helm templated Pipelines*/}}
 {{- $pipelineValues := (dict
   "uri" (default $.Values.defaults.camera.uri (default (dict "uri" $.Values.defaults.camera.uri) .camera).uri)
+  "peripherals" (default $.Values.defaults.camera.peripherals (default (dict "peripherals" $.Values.defaults.camera.peripherals) .camera).peripherals)
   "camera_id" .name
   "name" .name
   "camera" .camera
@@ -20,7 +21,6 @@ metadata:
     {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 4 }}
 data:
   DEBUG_LEVEL: "{{ default $.Values.defaults.debugLevel .debugLevel }}"
-  MQTT_CLIENT_ID: "{{ .name }}"
   MQTT_SERVICE_HOST: "{{ default $.Values.defaults.mqtt.broker (default (dict "broker" $.Values.defaults.mqtt.broker) .mqtt).broker }}"
   MQTT_SERVICE_PORT: "{{ default $.Values.defaults.mqtt.port (default (dict "port" $.Values.defaults.mqtt.port) .mqtt).port }}"
   MQTT_QOS: "{{ default $.Values.defaults.mqtt.qos (default (dict "qos" $.Values.defaults.mqtt.qos) .mqtt).qos }}"
@@ -32,14 +32,13 @@ data:
   METRICS_STATE_TOPIC: "{{ default $.Values.defaults.mqtt.metricsTopic (default (dict "metricsTopic" $.Values.defaults.mqtt.metricsTopic) .mqtt).metricsTopic }}"
   ALLOW_NON_INFERENCE_FRAMES: "{{ default $.Values.defaults.mqtt.nonInferenceEvents (default (dict "nonInferenceEvents" $.Values.defaults.mqtt.nonInferenceEvents) .mqtt).nonInferenceEvents }}"
   ALLOW_NON_MOTION_FRAMES: "{{ default $.Values.defaults.mqtt.nonMotionEvents (default (dict "nonMotionEvents" $.Values.defaults.mqtt.nonMotionEvents) .mqtt).nonMotionEvents }}"
-  MOTION_ACTIVE_INTERVAL: "{{ default $.Values.defaults.camera.motion.activeInterval (default (dict "activeInterval" $.Values.defaults.camera.motion.activeInterval) .camera.motion).activeInterval }}"
-  MOTION_INACTIVE_INTERVAL: "{{ default $.Values.defaults.camera.motion.inactiveInterval (default (dict "inactiveInterval" $.Values.defaults.camera.motion.inactiveInterval) .camera.motion).inactiveInterval }}"
-  PERIPHERAL_TYPE: "{{ default $.Values.defaults.camera.type (default (dict "type" $.Values.defaults.camera.type) .camera).type }}"
-  PERIPHERAL_NAME: "{{ .name }}"
-  # Variable substitution in GST_PIPELINE_TEMPLATE replaces "camera_id"
-  PERIPHERAL_ID: "{{ .name }}"
-  # Variable substitution in GST_PIPELINE_TEMPLATE replaces "uri"
-  PERIPHERAL_STREAM_URI: "{{ default $.Values.defaults.camera.uri (default (dict "uri" $.Values.defaults.camera.uri) .camera).uri }}"
-  GST_PIPELINE_TEMPLATE: "{{- tpl (default $.Values.defaults.camera.pipeline (default (dict "pipeline" $.Values.defaults.camera.pipeline) .camera).pipeline) $pipelineValues -}}"
-  GST_PIPELINE_RETRY_COUNT: "{{ default $.Values.defaults.camera.pipelineRetryCount (default (dict "pipelineRetryCount" $.Values.defaults.camera.pipelineRetryCount) .camera).pipelineRetryCount }}"
+  MOTION_ACTIVE_INTERVAL: "{{ default $.Values.defaults.camera.motion.activeInterval (default (dict "activeInterval" $.Values.defaults.camera.motion.activeInterval) .motion).activeInterval }}"
+  MOTION_INACTIVE_INTERVAL: "{{ default $.Values.defaults.camera.motion.inactiveInterval (default (dict "inactiveInterval" $.Values.defaults.camera.motion.inactiveInterval) .motion).inactiveInterval }}"
+  HEALTHZ_ENABLE: "{{ default $.Values.defaults.healthz.enabled (default (dict "enabled" $.Values.defaults.healthz.enabled) .healthz).enabled }}"
+  HEALTHZ_HTTP_BIND: "{{ default $.Values.defaults.healthz.port (default (dict "port" $.Values.defaults.healthz.port) .port).port }}"
+  HEALTHZ_WATCH_SEC: "{{ default $.Values.defaults.healthz.threshold (default (dict "threshold" $.Values.defaults.healthz.threshold) .healthz).threshold }}"
+  GST_PIPELINE: "{{- tpl (default $.Values.defaults.camera.pipeline (default (dict "pipeline" $.Values.defaults.camera.pipeline) .camera).pipeline) $pipelineValues -}}"
+  PERIPHERAL_IDS: "{{ include "nvr.peripheralIDs" (dict "peripherals" (default $.Values.defaults.camera.peripherals (default (dict "peripherals" $.Values.defaults.camera.peripherals) .camera).peripherals)) }}"
+  PERIPHERAL_NAMES: "{{ include "nvr.peripheralNames" (dict "peripherals" (default $.Values.defaults.camera.peripherals (default (dict "peripherals" $.Values.defaults.camera.peripherals) .camera).peripherals)) }}"
+
 {{- end }}
