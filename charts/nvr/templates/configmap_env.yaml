@@ -6,7 +6,6 @@
   "camera_id" .name
   "name" .name
   "camera" .camera
-  "nvdsanalytics" .nvdsanalytics
   "Values" (dict "defaults" $.Values.defaults)
 ) -}}
 ---

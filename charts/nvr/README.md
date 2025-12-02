@@ -63,6 +63,12 @@ spec:
     
     instances:
       - name: teknoir-nvr-vid1
+        nvdewarper:
+          enabled: true
+          nvdewarper_1_enabled: true
+          nvdewarper_2_enabled: true
+          nvdewarper_3_enabled: true
+          nvdewarper_4_enabled: true
         camera:
           uri: rtsp://mediamtx:8554/co015-sales-floor
           peripherals:
@@ -74,12 +80,6 @@ spec:
               id: teknoir-nvr-vid3
             - name: Teknoir-NVR-Vid#4
               id: teknoir-nvr-vid4
-          nvdewarper:
-            enabled: true
-            nvdewarper_1_enabled: true
-            nvdewarper_2_enabled: true
-            nvdewarper_3_enabled: true
-            nvdewarper_4_enabled: true
           pipeline: |-
             rtspsrc location={{.uri}} protocols=tcp latency=500
             ! application/x-rtp,media=video,encoding-name=H264

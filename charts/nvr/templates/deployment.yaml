@@ -21,8 +21,7 @@ spec:
         app: {{ .name }}
       annotations:
         checksum/config-env: {{ include (print $.Template.BasePath "/configmap_env.yaml") $ | sha256sum }}
-        checksum/config-nvdsanalytics: {{ tpl (default $.Values.defaults.nvdsanalytics.config (default (dict "config" $.Values.defaults.nvdsanalytics.config) .nvdsanalytics).config) . | toJson | sha256sum }}
-        checksum/config-nvdewarper: {{ tpl (default $.Values.defaults.nvdewarper.config (default (dict "config" $.Values.defaults.nvdewarper.config) .nvdewarper).config) . | toJson | sha256sum }}
+        checksum/config-nvdewarper: {{ toJson (default $.Values.defaults.nvdewarper .nvdewarper) | sha256sum }}
 {{- with (default $.Values.defaults.annotations .annotations) }}
 {{- toYaml . | nindent 8 }}
 {{- end }}
@@ -81,11 +80,6 @@ spec:
           hostPath:
             path: {{ default $.Values.defaults.videoStoragePath .videoStoragePath }}
             type: DirectoryOrCreate
-        {{- if (default $.Values.defaults.nvdsanalytics.enabled (default (dict "enabled" $.Values.defaults.nvdsanalytics.enabled) .nvdsanalytics).enabled) }}
-        - name: nvdsanalytics-config
-          configMap:
-            name: {{ .name }}-analytics-config
-        {{- end }}
         {{- if (default $.Values.defaults.nvdewarper.enabled (default (dict "enabled" $.Values.defaults.nvdewarper.enabled) .nvdewarper).enabled) }}
         - name: nvdewarper-config
           configMap:
