@@ -20,8 +20,11 @@ spec:
         teknoir.org/app: {{ .name }}
         app: {{ .name }}
       annotations:
-        checksum/config-env: {{ include (print $.Template.BasePath "/configmap_env.yaml") $ | sha256sum }}
-        checksum/config-nvdewarper: {{ toJson (default $.Values.defaults.nvdewarper .nvdewarper) | sha256sum }}
+{{- $detectChanges := (dict
+  "overrides" .
+  "defaults" (dict "defaults" $.Values.defaults)
+) -}}
+        checksum/config-detect-changes: {{ toJson $detectChanges | sha256sum }}
 {{- with (default $.Values.defaults.annotations .annotations) }}
 {{- toYaml . | nindent 8 }}
 {{- end }}
