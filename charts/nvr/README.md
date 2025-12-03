@@ -49,7 +49,7 @@ spec:
       debugLevel: DEBUG
       trackers:
         - name: nvidia-tracker
-          image: us-docker.pkg.dev/teknoir/gcr.io/nvidia-tracker-deepstream:ds7.1-ada
+          image: us-docker.pkg.dev/teknoir/gcr.io/nvidia-tracker-deepstream:latest
       motion:
         # Number of frames to skip inference when no motion detected
         inactiveInterval: 900
@@ -109,7 +109,7 @@ spec:
             ! queue ! videorate ! video/x-raw,framerate=10/1
             ! queue ! nvvideoconvert
             ! queue ! nvv4l2h264enc copy-meta=true profile=7 control-rate=1 bitrate=3000000 iframeinterval=5 idrinterval=10
-            ! queue ! h264parse ! queue ! splitmuxsink sink=nvdsfilesink muxer-properties=properties,streamable=true,moov-relocation=true send-keyframe-requests=true location=/videos/segments/{{(index .peripherals 0).id}}_%05d.mp4 max-size-time=15000000000 max-files=28
+            ! queue ! h264parse ! queue ! splitmuxsink sink=nvdsfilesink muxer-properties=properties,streamable=true,moov-relocation=true send-keyframe-requests=true location=/app/videos/{{(index .peripherals 0).id}}_%05d.mp4 max-size-time=15000000000 max-files=28
             src.
             ! queue ! nvdewarper config-file=/app/nvdewarper_config/nvdewarper_2_config.txt
             ! queue ! nvmux.sink_1
@@ -124,7 +124,7 @@ spec:
             ! queue ! videorate ! video/x-raw,framerate=10/1
             ! queue ! nvvideoconvert
             ! queue ! nvv4l2h264enc copy-meta=true profile=7 control-rate=1 bitrate=3000000 iframeinterval=5 idrinterval=10
-            ! queue ! h264parse ! queue ! splitmuxsink sink=nvdsfilesink muxer-properties=properties,streamable=true,moov-relocation=true send-keyframe-requests=true location=/videos/segments/{{(index .peripherals 1).id}}_%05d.mp4 max-size-time=15000000000 max-files=28
+            ! queue ! h264parse ! queue ! splitmuxsink sink=nvdsfilesink muxer-properties=properties,streamable=true,moov-relocation=true send-keyframe-requests=true location=/app/videos/{{(index .peripherals 1).id}}_%05d.mp4 max-size-time=15000000000 max-files=28
             src.
             ! queue ! nvdewarper config-file=/app/nvdewarper_config/nvdewarper_3_config.txt
             ! queue ! nvmux.sink_2
@@ -139,7 +139,7 @@ spec:
             ! queue ! videorate ! video/x-raw,framerate=10/1
             ! queue ! nvvideoconvert
             ! queue ! nvv4l2h264enc copy-meta=true profile=7 control-rate=1 bitrate=3000000 iframeinterval=5 idrinterval=10
-            ! queue ! h264parse ! queue ! splitmuxsink sink=nvdsfilesink muxer-properties=properties,streamable=true,moov-relocation=true send-keyframe-requests=true location=/videos/segments/{{(index .peripherals 2).id}}_%05d.mp4 max-size-time=15000000000 max-files=28
+            ! queue ! h264parse ! queue ! splitmuxsink sink=nvdsfilesink muxer-properties=properties,streamable=true,moov-relocation=true send-keyframe-requests=true location=/app/videos/{{(index .peripherals 2).id}}_%05d.mp4 max-size-time=15000000000 max-files=28
             src.
             ! queue ! nvdewarper config-file=/app/nvdewarper_config/nvdewarper_4_config.txt
             ! queue ! nvmux.sink_3
@@ -154,7 +154,7 @@ spec:
             ! queue ! videorate ! video/x-raw,framerate=10/1
             ! queue ! nvvideoconvert
             ! queue ! nvv4l2h264enc copy-meta=true profile=7 control-rate=1 bitrate=3000000 iframeinterval=5 idrinterval=10
-            ! queue ! h264parse ! queue ! splitmuxsink sink=nvdsfilesink muxer-properties=properties,streamable=true,moov-relocation=true send-keyframe-requests=true location=/videos/segments/{{(index .peripherals 3).id}}_%05d.mp4 max-size-time=15000000000 max-files=28
+            ! queue ! h264parse ! queue ! splitmuxsink sink=nvdsfilesink muxer-properties=properties,streamable=true,moov-relocation=true send-keyframe-requests=true location=/app/videos/{{(index .peripherals 3).id}}_%05d.mp4 max-size-time=15000000000 max-files=28
     
       - name: teknoir-nvr-vid2
         camera:
@@ -184,7 +184,7 @@ spec:
             ! queue ! videorate ! video/x-raw,framerate=10/1
             ! queue ! nvvideoconvert
             ! queue ! nvv4l2h264enc copy-meta=true profile=7 control-rate=1 bitrate=3000000 iframeinterval=5 idrinterval=10
-            ! queue ! h264parse ! queue ! splitmuxsink sink=nvdsfilesink muxer-properties=properties,streamable=true,moov-relocation=true send-keyframe-requests=true location=/videos/segments/{{(index .peripherals 0).id}}_%05d.mp4 max-size-time=15000000000 max-files=28
+            ! queue ! h264parse ! queue ! splitmuxsink sink=nvdsfilesink muxer-properties=properties,streamable=true,moov-relocation=true send-keyframe-requests=true location=/app/videos/{{(index .peripherals 0).id}}_%05d.mp4 max-size-time=15000000000 max-files=28
     
       - name: teknoir-nvr-vid3
         motion:

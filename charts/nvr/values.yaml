@@ -72,7 +72,7 @@ defaults:
     nonMotionEvents: true
   healthz:
     enabled: true
-    port: 8000
+    bind: :8000
     threshold: 20.0
   livenessProbe:
     initialDelaySeconds: 300 # In case the tracker models take long to load

@@ -34,7 +34,7 @@ data:
   MOTION_ACTIVE_INTERVAL: "{{ default $.Values.defaults.camera.motion.activeInterval (default (dict "activeInterval" $.Values.defaults.camera.motion.activeInterval) .motion).activeInterval }}"
   MOTION_INACTIVE_INTERVAL: "{{ default $.Values.defaults.camera.motion.inactiveInterval (default (dict "inactiveInterval" $.Values.defaults.camera.motion.inactiveInterval) .motion).inactiveInterval }}"
   HEALTHZ_ENABLE: "{{ default $.Values.defaults.healthz.enabled (default (dict "enabled" $.Values.defaults.healthz.enabled) .healthz).enabled }}"
-  HEALTHZ_HTTP_BIND: "{{ default $.Values.defaults.healthz.port (default (dict "port" $.Values.defaults.healthz.port) .port).port }}"
+  HEALTHZ_HTTP_BIND: "{{ default $.Values.defaults.healthz.bind (default (dict "bind" $.Values.defaults.healthz.bind) .bind).bind }}"
   HEALTHZ_WATCH_SEC: "{{ default $.Values.defaults.healthz.threshold (default (dict "threshold" $.Values.defaults.healthz.threshold) .healthz).threshold }}"
   GST_PIPELINE: "{{- tpl (default $.Values.defaults.camera.pipeline (default (dict "pipeline" $.Values.defaults.camera.pipeline) .camera).pipeline) $pipelineValues -}}"
   PERIPHERAL_IDS: "{{ include "nvr.peripheralIDs" (dict "peripherals" (default $.Values.defaults.camera.peripherals (default (dict "peripherals" $.Values.defaults.camera.peripherals) .camera).peripherals)) }}"
