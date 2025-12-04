@@ -22,9 +22,9 @@ spec:
       annotations:
 {{- $detectChanges := (dict
   "overrides" .
-  "defaults" (dict "defaults" $.Values.defaults)
+  "defaults" $.Values.defaults
 ) -}}
-        checksum/config-detect-changes: {{ toJson $detectChanges | sha256sum }}
+        checksum/config-detect-changes: {{ toJson $detectChanges | toString | sha256sum }}
 {{- with (default $.Values.defaults.annotations .annotations) }}
 {{- toYaml . | nindent 8 }}
 {{- end }}
