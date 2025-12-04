@@ -14,14 +14,10 @@ defaults:
     # - camera_id: release full name | fullnameOverride
     pipeline: |-
       videotestsrc is-live=true
-      ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),width=1920,height=1080 ! queue name=src
+        ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),format=RGBA,width=1920,height=1080 ! tee name=src
       src.
-      ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),width=[1,320],height=[1,240],pixel-aspect-ratio=1/1
-      ! queue ! nvvideoconvert
-      ! queue ! motioncells threshold=0.00005 gridx=32 gridy=24 ! fakesink
-      src.
-      ! queue ! nvvideoconvert
-      ! queue ! nvjpegenc quality=55 ! nvdsmqttsink
+        ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),width=1920,height=1080 ! queue ! nvvideoconvert
+        ! queue ! nvjpegenc quality=75 ! nvdsmqttsink
     # One pipeline can define multiple streams that we define by index to a peripheral
     peripherals:
       - name: Teknoir-NVR
