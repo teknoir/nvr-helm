@@ -20,10 +20,10 @@ spec:
         teknoir.org/app: {{ .name }}
         app: {{ .name }}
       annotations:
-{{- $detectChanges := (dict
+{{ $detectChanges := (dict
   "overrides" .
   "defaults" $.Values.defaults
-) -}}
+) }}
         checksum/config-detect-changes: {{ toJson $detectChanges | toString | sha256sum }}
 {{- with (default $.Values.defaults.annotations .annotations) }}
 {{- toYaml . | nindent 8 }}
