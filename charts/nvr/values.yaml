@@ -27,6 +27,7 @@ defaults:
       inactiveInterval: 900
       # Number of frames to skip inference when motion is detected
       activeInterval: 0
+    outputTensorMeta: false
   # The path to the models directory
   modelRepositoryPath: /opt/teknoir/models
   # Trackers to be installed via a shared mounted host path (volume)
