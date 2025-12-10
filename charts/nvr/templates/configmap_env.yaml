@@ -37,7 +37,7 @@ data:
   HEALTHZ_HTTP_BIND: "{{ default $.Values.defaults.healthz.bind (default (dict "bind" $.Values.defaults.healthz.bind) .bind).bind }}"
   HEALTHZ_WATCH_SEC: "{{ default $.Values.defaults.healthz.threshold (default (dict "threshold" $.Values.defaults.healthz.threshold) .healthz).threshold }}"
   GST_PIPELINE: "{{- tpl (default $.Values.defaults.camera.pipeline (default (dict "pipeline" $.Values.defaults.camera.pipeline) .camera).pipeline) $pipelineValues -}}"
-  OUTPUT_TENSOR_META: "{{ default $.Values.defaults.camera.outputTensorMeta (default (dict "outputTensorMeta" $.Values.defaults.camera.outputTensorMeta) .camera).outputTensorMeta }}"
+  OUTPUT_TENSOR_META: "{{ default $.Values.defaults.camera.outputReIdEmbedding (default (dict "outputReIdEmbedding" $.Values.defaults.camera.outputReIdEmbedding) .camera).outputReIdEmbedding }}"
   PERIPHERAL_IDS: "{{ include "nvr.peripheralIDs" (dict "peripherals" (default $.Values.defaults.camera.peripherals (default (dict "peripherals" $.Values.defaults.camera.peripherals) .camera).peripherals)) }}"
   PERIPHERAL_NAMES: "{{ include "nvr.peripheralNames" (dict "peripherals" (default $.Values.defaults.camera.peripherals (default (dict "peripherals" $.Values.defaults.camera.peripherals) .camera).peripherals)) }}"
 
