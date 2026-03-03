@@ -35,6 +35,7 @@ defaults:
     # ds7.1-gst1.24.12: Nvidia Ada Lovelace GPU on AMD64
     # ds7-gst1.24.7-l4t: Nvidia Orin(tegra) on ARM64
     tag: ds7.1-gst1.24.12
+  nodeSelector: {}
   # Set the log level for the nvr
   # - DEBUG
   # - INFO
