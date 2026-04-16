@@ -41,6 +41,7 @@ defaults:
   # - WARNING
   # - ERROR
   debugLevel: INFO
+  gstDebug: 0
   mqtt:
     # Local MQTT broker
     broker: mqtt.kube-system

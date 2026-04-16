@@ -20,6 +20,7 @@ metadata:
     {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 4 }}
 data:
   DEBUG_LEVEL: "{{ default $.Values.defaults.debugLevel .debugLevel }}"
+  GST_DEBUG: "{{ default $.Values.defaults.debugLevel .debugLevel }}"
   MQTT_CLIENT_ID: "{{ .name }}"
   MQTT_SERVICE_HOST: "{{ default $.Values.defaults.mqtt.broker (default (dict "broker" $.Values.defaults.mqtt.broker) .mqtt).broker }}"
   MQTT_SERVICE_PORT: "{{ default $.Values.defaults.mqtt.port (default (dict "port" $.Values.defaults.mqtt.port) .mqtt).port }}"
