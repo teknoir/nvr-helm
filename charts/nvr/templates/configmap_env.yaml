@@ -41,6 +41,7 @@ data:
   # Variable substitution in GST_PIPELINE_TEMPLATE replaces "uri"
   PERIPHERAL_STREAM_URI: "{{ default $.Values.defaults.camera.uri (default (dict "uri" $.Values.defaults.camera.uri) .camera).uri }}"
   NVIDIA_DRIVER_CAPABILITIES: "all"
+  NVIDIA_VISIBLE_DEVICES: "all"
   GST_PIPELINE: "{{- tpl (default $.Values.defaults.camera.pipeline (default (dict "pipeline" $.Values.defaults.camera.pipeline) .camera).pipeline) $pipelineValues -}}"
   # TODO: Add 	PERIPHERAL_IDS []string `default:"teknoir-nvr-1,teknoir-nvr-2,teknoir-nvr-3,teknoir-nvr-4"` & PERIPHERAL_NAMES []string `default:"Teknoir-NVR-#1,Teknoir-NVR-#2,Teknoir-NVR-#3,Teknoir-NVR-#4"`
 {{- end }}
