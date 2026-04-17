@@ -19,6 +19,15 @@ defaults:
       inactiveInterval: 900
       # Number of frames to skip inference when motion is detected
       activeInterval: 0
+    peripherals:
+      - name: Teknoir-NVR-#1
+        id: teknoir-nvr-1
+      - name: Teknoir-NVR-#2
+        id: teknoir-nvr-2
+      - name: Teknoir-NVR-#3
+        id: teknoir-nvr-3
+      - name: Teknoir-NVR-#4
+        id: teknoir-nvr-4
   # The path to the models directory
   modelRepositoryPath: /opt/teknoir/models
   # Trackers to be installed via a shared mounted host path (volume)
@@ -41,7 +50,7 @@ defaults:
   # - WARNING
   # - ERROR
   debugLevel: INFO
-  gstDebug: 0
+  gstDebug: "0"
   mqtt:
     # Local MQTT broker
     broker: mqtt.kube-system
@@ -118,4 +127,3 @@ defaults:
     site: "interior"
     zone: "test"
     group: "poc"
-
