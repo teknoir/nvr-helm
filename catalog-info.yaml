@@ -1,0 +1,26 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  title: NVR HelmChart
+  name: nvr-helm
+  namespace: teknoir
+  description: The Teknoir Network Video Recorder HelmChart
+  annotations:
+    'github.com/project-slug': teknoir/nvr-helm
+    'teknoir.org/helm-registry': teknoir.github.io/nvr-helm
+    'teknoir.org/helmchart': nvr
+    'backstage.io/techdocs-ref': dir:.
+spec:
+  type: helmchart
+  owner: group:teknoir/public
+  system: system:teknoir/core
+  lifecycle: production
+  dependsOn:
+    - component:teknoir/ghcr.io.teknoir.nvr
+  registry: teknoir.github.io/nvr-helm
+  helmchart: nvr
+  versions:
+    - 0.0.2
+
+

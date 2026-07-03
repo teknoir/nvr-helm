@@ -1,30 +1,56 @@
+{{- range .Values.instances }}
+{{/*# Added to support Helm templated Pipelines*/}}
+{{- $pipelineValues := (dict
+  "uri" (default $.Values.defaults.camera.uri (default (dict "uri" $.Values.defaults.camera.uri) .camera).uri)
+  "camera_id" .name
+  "name" .name
+  "camera" .camera
+  "nvdsanalytics" .nvdsanalytics
+  "Values" (dict "defaults" $.Values.defaults)
+) -}}
+{{- $peripherals := $.Values.defaults.camera.peripherals -}}
+{{- if and .camera (hasKey .camera "peripherals") -}}
+  {{- $peripherals = .camera.peripherals -}}
+{{- end -}}
+{{- $_ := set $pipelineValues "peripherals" $peripherals -}}
+{{- $cameraMotion := $.Values.defaults.camera.motion -}}
+{{- if and .camera (hasKey .camera "motion") -}}
+  {{- $cameraMotion = .camera.motion -}}
+{{- end -}}
+{{- $peripheralIds := list -}}
+{{- $peripheralNames := list -}}
+{{- range $peripherals -}}
+  {{- $peripheralIds = append $peripheralIds .id -}}
+  {{- $peripheralNames = append $peripheralNames .name -}}
+{{- end -}}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "{{ include "nvr.fullname" . }}-env-config"
+  name: {{ .name }}-env-config
+  namespace: {{ $.Release.Namespace }}
   labels:
-    app: nvr
+    app: {{ .name }}
+  annotations:
+    {{- toYaml (default $.Values.defaults.annotations .annotations) | nindent 4 }}
 data:
-  MQTT_CLIENT_ID: {{ include "nvr.fullname" . }}
-  MQTT_SERVICE_HOST: "mqtt.kube-system"
-  DEBUG_LEVEL: "DEBUG"
-  ENABLE_MQTT_STATE: "true"
-  ALLOW_NON_INFERENCE_FRAMES: "true"
-  ALLOW_NON_MOTION_FRAMES: "true"
-  MOTION_ACTIVE_INTERVAL: "0"
-  MOTION_INACTIVE_INTERVAL: "900"
-  PERIPHERAL_TYPE: "camera"
-  PERIPHERAL_NAME: { { include "nvr.fullname" . } }
-  # Variable substitution in GST_PIPELINE_TEMPLATE replaces "camera_id"
-  PERIPHERAL_ID: {{ include "nvr.fullname" . }}
-  # Variable substitution in GST_PIPELINE_TEMPLATE replaces "uri"
-  PERIPHERAL_STREAM_URI: "rtsp://rtsp-video-file-streams:8554/vid5"
-  GST_PIPELINE_TEMPLATE: "videotestsrc pattern=ball ! queue ! nvvideoconvert ! video/x-raw(memory:NVMM),width=1920,height=1080 ! ! tee name=t t. ! nvvideoconvert ! video/x-raw(memory:NVMM),width=[1,1920],height=[1,1080],pixel-aspect-ratio=1/1 ! nvvideoconvert ! queue ! nvjpegenc quality=55 ! appsink sync=0 name=mqttsink t. ! nvvideoconvert ! video/x-raw,format=RGB,width=[1,640],height=[1,360],pixel-aspect-ratio=1/1 ! nvvideoconvert ! motioncells threshold=0.0001 gridx=32 gridy=18 ! fakesink"
-  # Deprecated in favor of ORG TREE
-  LOCATION_COUNTRY: "us"
-  LOCATION_REGION: "texas"
-  LOCATION_BRANCH: "houston"
-  LOCATION_FACILITY: "office"
-  LOCATION_SITE: "interior"
-  LOCATION_ZONE: "test"
-  LOCATION_GROUP: "poc"
+  DEBUG_LEVEL: "{{ default $.Values.defaults.debugLevel .debugLevel }}"
+  GST_DEBUG: "{{ default $.Values.defaults.gstDebug .gstDebug }}"
+  MQTT_CLIENT_ID: "{{ .name }}"
+  MQTT_SERVICE_HOST: "{{ default $.Values.defaults.mqtt.broker (default (dict "broker" $.Values.defaults.mqtt.broker) .mqtt).broker }}"
+  MQTT_SERVICE_PORT: "{{ default $.Values.defaults.mqtt.port (default (dict "port" $.Values.defaults.mqtt.port) .mqtt).port }}"
+  MQTT_QOS: "{{ default $.Values.defaults.mqtt.qos (default (dict "qos" $.Values.defaults.mqtt.qos) .mqtt).qos }}"
+  MQTT_KEEP_ALIVE_INTERVAL: "{{ default $.Values.defaults.mqtt.keepAliveInterval (default (dict "keepAliveInterval" $.Values.defaults.mqtt.keepAliveInterval) .mqtt).keepAliveInterval }}"
+  MQTT_CONNECT_RETRY_INTERVAL: "{{ default $.Values.defaults.mqtt.connectRetryInterval (default (dict "connectRetryInterval" $.Values.defaults.mqtt.connectRetryInterval) .mqtt).connectRetryInterval }}"
+  MQTT_OUT_PREFIX: "{{ default $.Values.defaults.mqtt.topicPrefix (default (dict "topicPrefix" $.Values.defaults.mqtt.topicPrefix) .mqtt).topicPrefix }}"
+  MQTT_QUEUE_LIMIT: "{{ default $.Values.defaults.mqtt.queueLimit (default (dict "queueLimit" $.Values.defaults.mqtt.queueLimit) .mqtt).queueLimit }}"
+  ENABLE_MQTT_STATE: "{{ default $.Values.defaults.mqtt.metrics (default (dict "metrics" $.Values.defaults.mqtt.metrics) .mqtt).metrics }}"
+  METRICS_STATE_TOPIC: "{{ default $.Values.defaults.mqtt.metricsTopic (default (dict "metricsTopic" $.Values.defaults.mqtt.metricsTopic) .mqtt).metricsTopic }}"
+  ALLOW_NON_INFERENCE_FRAMES: "{{ default $.Values.defaults.mqtt.nonInferenceEvents (default (dict "nonInferenceEvents" $.Values.defaults.mqtt.nonInferenceEvents) .mqtt).nonInferenceEvents }}"
+  ALLOW_NON_MOTION_FRAMES: "{{ default $.Values.defaults.mqtt.nonMotionEvents (default (dict "nonMotionEvents" $.Values.defaults.mqtt.nonMotionEvents) .mqtt).nonMotionEvents }}"
+  MOTION_ACTIVE_INTERVAL: "{{ $cameraMotion.activeInterval }}"
+  MOTION_INACTIVE_INTERVAL: "{{ $cameraMotion.inactiveInterval }}"
+  PERIPHERAL_IDS: "{{ join "," (toStrings $peripheralIds) }}"
+  PERIPHERAL_NAMES: "{{ join "," (toStrings $peripheralNames) }}"
+  GST_PIPELINE: "{{- tpl (default $.Values.defaults.camera.pipeline (default (dict "pipeline" $.Values.defaults.camera.pipeline) .camera).pipeline) $pipelineValues -}}"
+{{- end }}
